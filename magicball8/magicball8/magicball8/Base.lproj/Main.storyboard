@@ -32,11 +32,11 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Rn-Ts-TXB">
                                 <rect key="frame" x="0.0" y="541" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.15686274509803921" green="0.82212999131944442" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.15686274510000001" green="0.82212999129999997" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" name="Helvetica-BoldOblique" family="Helvetica" pointSize="36"/>
                                 <state key="normal" title="Shake Me!">
                                     <color key="titleColor" red="0.94881184895833337" green="0.86330837673611116" blue="0.97474500868055558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" red="0.43473307291666669" green="0.86330837673611116" blue="0.53648546006944442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="1" green="1" blue="0.70266384550000005" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="askButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bur-e5-x45"/>

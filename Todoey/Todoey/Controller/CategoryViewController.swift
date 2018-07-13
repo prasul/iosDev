@@ -7,16 +7,20 @@
 //
 
 import UIKit
-import CoreData
+//import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
-    //MARK: Defining variables.
-    var categoryArray = [Category]()
-    let contextItem =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    let realm = try! Realm()
+    //MARK: Defining variables.
+    var categories: Results<Category>?
+    //   COREDATA:  let contextItem =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//var categoryArray = [Category]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
+        loadCategories()
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
     }
     
     override func didReceiveMemoryWarning() {
@@ -28,16 +32,15 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return categoryArray.count
+      return categories?.count ?? 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = categoryArray[indexPath.row].name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories found"
         return cell
     }
     //MARK: - Table View delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Row got selected \(categoryArray[indexPath.row].name!)")
         performSegue(withIdentifier: "goToItems", sender: self)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -46,30 +49,47 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         print(tableView.indexPathForSelectedRow!)
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
-            print("Selected indexpath is \(categoryArray[indexPath.row].name!)")
+            destinationVC.selectedCategory = categories?[indexPath.row]
         }
         
     }
     //MARK: - Data Manipulation Methods
+//   This is the method used to save data when using core data
+//    func saveData(){
+//        do {
+//            try contextItem.save()
+//        } catch {
+//            print("Error saving data: \(error)")
+//        }
+//        tableView.reloadData()
+//    }
+    // The following method is used to save data using realm
     
-    func saveData(){
+    func save(category: Category){
         do {
-            try contextItem.save()
-        } catch {
-            print("Error saving data: \(error)")
+            try realm.write {
+                realm.add(category)
+            }
+        }catch {
+            print("Error saving data : \(error)")
         }
         tableView.reloadData()
     }
     
     //MARK: Data functions
+// CoreDATA function here
+//    func loadData(with fetchItems: NSFetchRequest<Category> = Category.fetchRequest()){
+//        do {
+//            categoryArray = try contextItem.fetch(fetchItems)
+//        }catch {
+//            print("Unable to fetch items : \(error)")
+//        }
+//        tableView.reloadData()
+//    }
     
-    func loadData(with fetchItems: NSFetchRequest<Category> = Category.fetchRequest()){
-        do {
-            categoryArray = try contextItem.fetch(fetchItems)
-        }catch {
-            print("Unable to fetch items : \(error)")
-        }
+    
+    func loadCategories(){
+        categories = realm.objects(Category.self)
         tableView.reloadData()
     }
     
@@ -81,10 +101,11 @@ class CategoryViewController: UITableViewController {
             textFieldData = alertTextField
         }
         let action = UIAlertAction(title: "Add new category", style: .default) { (buttonPressed) in
-            let newItem = Category(context: self.contextItem)
+// This method for coredata            let newItem = Category(context: self.contextItem)
+            let newItem = Category()
             newItem.name = textFieldData.text!
-            self.categoryArray.append(newItem)
-            self.saveData()
+//not needed for realm as it autoupdates            self.categoryArray.append(newItem)
+            self.save(category: newItem)
             //            self.defaults.set(self.messageArray, forKey: "ToDoList")
         }
         alertItem.addAction(action)
